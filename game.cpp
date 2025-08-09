@@ -1,22 +1,15 @@
-#include <SDL3/SDL.h>
+
 
 #include "game.h"
+#include "graphics.h"
 #include <stdio.h>
 
-namespace{
-	const int kScreenWidth = 640;
-	const int kScreenHeight = 480;
-	const int kBitsPerPixel = 32;
-}
+
 
 Game::Game(){
-	SDL_InitSubSystem(SDL_INIT_VIDEO);
-	SDL_InitSubSystem(SDL_INIT_AUDIO);
-	SDL_InitSubSystem(SDL_INIT_GAMEPAD);
+	SDL_Init(0);
 	SDL_HideCursor();
-
-	SDL_CreateWindowAndRenderer("GameWin", kScreenWidth, kScreenHeight, NULL, &m_window, &m_renderer);
-
+	
 	eventLoop();
 }
 Game::~Game(){
@@ -24,6 +17,7 @@ Game::~Game(){
 }
 
 void Game::eventLoop(){
+	Graphics graphics;
 	SDL_Event event;
 
 	bool running = true;

@@ -1,6 +1,8 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+#include <SDL3/SDL.h>
+
 struct Game{
 	Game();
 	~Game();
@@ -8,9 +10,6 @@ struct Game{
 	void eventLoop();
 	void update();
 	void draw();
-
-	SDL_Window* m_window;
-	SDL_Renderer* m_renderer;
 };
 
 #endif 

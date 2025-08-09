@@ -21,6 +21,12 @@
     <ClCompile Include="game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="graphics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\Artwork\minoquote.bmp">
@@ -29,6 +35,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

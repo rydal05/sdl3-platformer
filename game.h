@@ -8,6 +8,7 @@
 #include "sprite.h"
 
 struct Game{
+	public:
 	Game();
 	~Game();
 

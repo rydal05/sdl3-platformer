@@ -9,15 +9,18 @@
 struct Sprite{
 	public:
 	Sprite(const std::string& file_path, int source_x, int source_y, int width, int height,SDL_Renderer* renderer);
-	~Sprite();
+	virtual ~Sprite();
 
+	virtual void update(int/*elapsed_time_ms*/){}
 	void draw(Graphics& graphics, int x, int y);
 	
+	protected:
+	SDL_FRect* m_sourceFRect;
+
 	private:
 	SDL_Surface* m_spritesheet;
 	SDL_Texture* m_texture;
-	SDL_Rect* m_source_rect;
-	SDL_Rect* m_destination_rect;
+	SDL_FRect* m_destinationFRect;
 	SDL_Renderer* m_renderer;
 	
 };

@@ -1,5 +1,7 @@
 #include "graphics.h"
 
+#include <iostream>
+
 namespace{
 	const int kScreenWidth = 640;
 	const int kScreenHeight = 480;
@@ -15,8 +17,6 @@ Graphics::~Graphics(){
 	SDL_DestroyWindow(m_window);
 }
 
-void Graphics::blitSurface(SDL_Renderer* renderer, SDL_Texture* texture,  SDL_Rect* source_rectangle,  SDL_Rect* destination_rectangle){
-
-
-	SDL_RenderTexture(renderer, texture, (const SDL_FRect*)source_rectangle, (const SDL_FRect*)destination_rectangle);
+void Graphics::blitSurface(SDL_Renderer* renderer, SDL_Texture* texture,  SDL_FRect* source_rectangle,  SDL_FRect* destination_rectangle){
+	SDL_RenderTexture(renderer, texture, source_rectangle, destination_rectangle);
 }

@@ -3,7 +3,10 @@
 
 #include "game.h"
 #include "graphics.h"
+#include "animatedSprite.h"
+#include "input.h"
 
+int Game::kTileSize = 32;
 
 Game::Game(){
 	SDL_Init(0);
@@ -18,30 +21,50 @@ Game::~Game(){
 void Game::eventLoop(){
 	Graphics graphics;
 	SDL_Event event;
+	Input input;
+
 	m_renderer = graphics.getRenderer();
-	sprite_.reset(new Sprite("C:\\Users\\maste\\Desktop\\Creatives\\Artwork\\minoquote.bmp",0,0,16,16, m_renderer));
+	sprite_.reset(new AnimatedSprite("C:\\Users\\maste\\Downloads\\MyChar.bmp",0,0,kTileSize,kTileSize, m_renderer,15,3));
 
 
 	bool running = true;
+	int last_update_time = SDL_GetTicks();
 	while(running){
-		Uint32 start_time_ms = SDL_GetTicks();
+		const Uint32 start_time_ms = SDL_GetTicks();
+		input.beginNewFrame();
 		while(SDL_PollEvent(&event)){
 			switch(event.type){
 				case SDL_EVENT_QUIT:
+				{
 					running = false;
 					break;
+				}
 				case SDL_EVENT_KEY_DOWN:
-					if(event.key.type == SDLK_ESCAPE){
-						running = false;
-					}
+				{
+					input.keyDownEvent(event);
 					break;
-				default: break;
+				}
+				case SDL_EVENT_KEY_UP:
+				{
+					input.keyUpEvent(event);
+					break;
+				}
+				default: { break; }
 			}
 		}
+
+		if(input.wasKeyPressed(SDLK_ESCAPE)){
+			running = false;
+		}
+
 		SDL_RenderClear(m_renderer);
 		SDL_SetRenderDrawColor(m_renderer, 0, 255, 0, 255);
 		//	ensure this loop lasts 1/60th of a second / runs 1000/60ths of a ms
-		update();
+		
+		const int current_time_ms = SDL_GetTicks();
+		update(current_time_ms - last_update_time);
+		last_update_time = current_time_ms;
+		
 		draw(graphics);
 		SDL_RenderPresent(m_renderer);
 		Uint32 elapsed_time_ms = SDL_GetTicks() - start_time_ms;
@@ -59,8 +82,8 @@ void Game::eventLoop(){
 	//	draw(). draw everything all at once
 }
 
-void Game::update(){
-
+void Game::update(int elapsed_time_ms){
+	sprite_->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics &graphics){
@@ -68,3 +91,4 @@ void Game::draw(Graphics &graphics){
 	
 	//graphics.flip();
 }
+

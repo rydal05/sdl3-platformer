@@ -12,9 +12,11 @@ struct Game{
 	Game();
 	~Game();
 
+	static int kTileSize;
+
 	private:
 	void eventLoop();
-	void update();
+	void update(int elapsed_time_ms);
 	void draw(Graphics &graphics);
 
 	SDL_Renderer* m_renderer;

@@ -12,7 +12,7 @@ struct Graphics{
 		return m_renderer;
 	}
 
-	void blitSurface(SDL_Renderer* renderer, SDL_Texture* texture,SDL_Rect* source_rectangle, SDL_Rect* destination_rectangle);
+	void blitSurface(SDL_Renderer* renderer, SDL_Texture* texture,SDL_FRect* source_rectangle, SDL_FRect* destination_rectangle);
 
 	private:
 	SDL_Window* m_window;

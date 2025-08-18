@@ -1,7 +1,12 @@
 #include "sprite.h"
 
 Sprite::Sprite(const std::string& file_path, int x, int y, int width, int height, SDL_Renderer* renderer){
-	m_source_rect = new SDL_Rect{x,y,width,height};
+	m_sourceFRect = new SDL_FRect{
+		(float)x,
+		(float)y,
+		(float)width,
+		(float)height
+	};
 	m_renderer = renderer;
 	m_spritesheet = SDL_LoadBMP(file_path.c_str());
 	
@@ -14,9 +19,7 @@ Sprite::~Sprite(){
 }
 
 void Sprite::draw(Graphics& graphics, int x, int y){
-	m_destination_rect = new SDL_Rect{x,y,m_source_rect->w,m_source_rect->h};
+	m_destinationFRect = new SDL_FRect{(float)x,(float)y,m_sourceFRect->w,m_sourceFRect->h};
 
-	graphics.blitSurface(m_renderer,m_texture,m_source_rect, m_destination_rect);
-
-	delete m_destination_rect;
+	graphics.blitSurface(m_renderer,m_texture,m_sourceFRect, m_destinationFRect);
 }

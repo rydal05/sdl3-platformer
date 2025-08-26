@@ -2,9 +2,10 @@
 #define ANIMATED_SPRITE_H
 
 #include "sprite.h"
+#include "game.h"
 
 struct AnimatedSprite: public Sprite {
-	AnimatedSprite(const std::string& file_path,
+	AnimatedSprite(Graphics& graphics, const std::string& file_path,
 		int source_x, int source_y,
 		int width, int height,
 		SDL_Renderer* renderer,

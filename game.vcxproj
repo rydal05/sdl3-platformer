@@ -130,6 +130,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="TEMP.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animatedSprite.h" />
@@ -138,10 +139,6 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="sprite.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\..\Downloads\MyChar.bmp" />
-    <Image Include="..\..\Artwork\minoquote.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

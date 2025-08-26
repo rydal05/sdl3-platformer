@@ -1,6 +1,6 @@
 #include "sprite.h"
 
-Sprite::Sprite(const std::string& file_path, int x, int y, int width, int height, SDL_Renderer* renderer){
+Sprite::Sprite(Graphics& graphics, const std::string& file_path, int x, int y, int width, int height, SDL_Renderer* renderer){
 	m_sourceFRect = new SDL_FRect{
 		(float)x,
 		(float)y,
@@ -8,10 +8,7 @@ Sprite::Sprite(const std::string& file_path, int x, int y, int width, int height
 		(float)height
 	};
 	m_renderer = renderer;
-	m_spritesheet = SDL_LoadBMP(file_path.c_str());
-	
-	m_texture = SDL_CreateTextureFromSurface(renderer, m_spritesheet);
-	SDL_DestroySurface(m_spritesheet);
+	m_texture = graphics.loadTexture(file_path);
 }
 
 Sprite::~Sprite(){

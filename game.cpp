@@ -3,7 +3,7 @@
 
 #include "game.h"
 #include "graphics.h"
-#include "animatedSprite.h"
+#include "player.h"
 #include "input.h"
 
 int Game::kTileSize = 32;
@@ -24,7 +24,7 @@ void Game::eventLoop(){
 	Input input;
 
 	m_renderer = graphics.getRenderer();
-	sprite_.reset(new AnimatedSprite("C:\\Users\\maste\\Downloads\\MyChar.bmp",0,0,kTileSize,kTileSize, m_renderer,15,3));
+	player_.reset(new Player(320, 240, m_renderer, graphics));
 
 
 	bool running = true;
@@ -57,8 +57,40 @@ void Game::eventLoop(){
 			running = false;
 		}
 
-		SDL_RenderClear(m_renderer);
-		SDL_SetRenderDrawColor(m_renderer, 0, 255, 0, 255);
+		//player horizontal movement
+		if(input.isKeyHeld(SDLK_LEFT) && input.isKeyHeld(SDLK_RIGHT)){
+			player_->stopMoving();
+		}
+		else if(input.isKeyHeld(SDLK_LEFT)){
+			player_->startMovingLeft();
+		}
+		else if(input.isKeyHeld(SDLK_RIGHT)){
+			player_->startMovingRight();
+		}
+		else{
+			player_->stopMoving();
+		}
+
+		if(input.isKeyHeld(SDLK_UP) && input.isKeyHeld(SDLK_DOWN)){
+			player_->lookHorizontal();
+		}
+		else if(input.isKeyHeld(SDLK_UP)){
+			player_->lookUp();
+		}
+		else if(input.isKeyHeld(SDLK_DOWN)){
+			player_->lookDown();
+		}
+		else{
+			player_->lookHorizontal();
+		}
+
+		//player jump
+		if(input.wasKeyPressed(SDLK_Z)){
+			player_->startJump();
+		} else if(input.wasKeyReleased(SDLK_Z)){
+			player_->stopJump();
+		}
+		
 		//	ensure this loop lasts 1/60th of a second / runs 1000/60ths of a ms
 		
 		const int current_time_ms = SDL_GetTicks();
@@ -73,7 +105,7 @@ void Game::eventLoop(){
 		}
 		const float seconds_per_frame = (SDL_GetTicks() - start_time_ms) / 1000.0;
 		const float fps = 1 / (seconds_per_frame);
-		printf("fps=%f\n", fps);
+		//printf("fps=%f\n", fps);
 		
 	}
 	//while running ~ 60hz
@@ -83,11 +115,13 @@ void Game::eventLoop(){
 }
 
 void Game::update(int elapsed_time_ms){
-	sprite_->update(elapsed_time_ms);
+	player_->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics &graphics){
-	sprite_->draw(graphics, 320, 240);
+	SDL_RenderClear(m_renderer);
+	SDL_SetRenderDrawColor(m_renderer, 0, 255, 0, 255);
+	player_->draw(graphics);
 	
 	//graphics.flip();
 }

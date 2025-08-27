@@ -3,21 +3,33 @@
 #include <cmath>
 
 namespace{
+	//Horizontal Motion
 	const float kSlowdownFactor = 0.8f;
 	const float kWalkingAcceleration = 0.0012f; //(pixels / ms) / ms
 	const float kMaxSpeedX = 0.325f; //(pixels / ms)
-
+	//Vertical motion
 	const float kGravity = 0.0012f;
-
 	const float kJumpSpeed = 0.325f; // pixels/ms
 	const float kMaxSpeedY = 0.425f;
 	const int kJumpTime = 275; // in ms
-
+	//Sprite directory
+	const std::string kSpriteFilePath = "sprites/MyChar Minogame.bmp";
+	//Sprite Frames
 	const int kJumpFrame = 1;
 	const int kFallFrame = 2;
+	const int kCharacterFrame = 0;
+	const int kWalkFrame = 0;
+	const int kStandFrame = 0;
+	//Vert Dir
+	const int kUpFrameOffset = 3;
+	const int kBackFrame = 7;
+	const int kDownFrame = 6;
+	//Frame timing
+	const int kWalkFps = 15;
+	const int kNumFrames = 3;
+
+	
 }
-
-
 
 bool operator<(const Player::SpriteState& a, const Player::SpriteState& b){
 	if(a.motion_type != b.motion_type){
@@ -128,57 +140,19 @@ void Player::initializeSprites(Graphics& graphics){
 	for(MotionType motion_type = FIRST_MOTION_TYPE;
 		motion_type < LAST_MOTION_TYPE;
 		++motion_type){
+		// for every horizontal facing
 		for(HorizontalFacing horizontal_facing = FIRST_HORIZONTAL_FACING;
 			horizontal_facing < LAST_HORIZONTAL_FACING;
 			++horizontal_facing){
+			// for every vertical facing
 			for(VerticalFacing vertical_facing = FIRST_VERTICAL_FACING;
 				vertical_facing < LAST_VERTICAL_FACING;
-				++vertical_facing){
-				initializeSprite(graphics, SpriteState(motion_type, horizontal_facing, vertical_facing));
-			}
-		}
-	}
-
-		// for every horizontal facing
-			// for every vertical facing
+				++vertical_facing)
 				// create a sprite state
 				// call initializesprite with spritestate
-	sprites_[SpriteState(STANDING, LEFT)] =
-		boost::shared_ptr<Sprite>(new Sprite(
-			graphics,
-			"sprites\\MyChar Minogame.bmp",
-			0, 0, Game::kTileSize, Game::kTileSize, m_renderer));
-	sprites_[SpriteState(WALKING, LEFT)] = boost::shared_ptr<Sprite>(new AnimatedSprite(graphics,
-		"sprites\\MyChar Minogame.bmp",
-		0, 0, Game::kTileSize, Game::kTileSize, m_renderer,
-		15, 3));
-	sprites_[SpriteState(WALKING, RIGHT)] = boost::shared_ptr<Sprite>(new AnimatedSprite(graphics,
-		"sprites\\MyChar Minogame.bmp",
-		0, Game::kTileSize, Game::kTileSize, Game::kTileSize, m_renderer,
-		15, 3));
-	sprites_[SpriteState(STANDING, RIGHT)] = boost::shared_ptr<Sprite>(new Sprite(graphics,
-		"sprites\\MyChar Minogame.bmp",
-		0, Game::kTileSize, Game::kTileSize, Game::kTileSize, m_renderer));
-	sprites_[SpriteState(JUMPING, LEFT)] =
-		boost::shared_ptr<Sprite>(new Sprite(
-			graphics,
-			"sprites\\MyChar Minogame.bmp",
-			kJumpFrame * Game::kTileSize, 0, Game::kTileSize, Game::kTileSize, m_renderer));
-	sprites_[SpriteState(FALLING, LEFT)] =
-		boost::shared_ptr<Sprite>(new Sprite(
-			graphics,
-			"sprites\\MyChar Minogame.bmp",
-			kFallFrame * Game::kTileSize, 0, Game::kTileSize, Game::kTileSize, m_renderer));
-	sprites_[SpriteState(JUMPING, RIGHT)] =
-		boost::shared_ptr<Sprite>(new Sprite(
-			graphics,
-			"sprites\\MyChar Minogame.bmp",
-			kJumpFrame * Game::kTileSize, Game::kTileSize, Game::kTileSize, Game::kTileSize, m_renderer));
-	sprites_[SpriteState(FALLING, RIGHT)] =
-		boost::shared_ptr<Sprite>(new Sprite(
-			graphics,
-			"sprites\\MyChar Minogame.bmp",
-			kFallFrame * Game::kTileSize, Game::kTileSize, Game::kTileSize, Game::kTileSize, m_renderer));
+				initializeSprite(graphics, SpriteState(motion_type, horizontal_facing, vertical_facing));
+		}
+	}
 }
 
 Player::SpriteState Player::getSpriteState(){
@@ -195,18 +169,13 @@ Player::SpriteState Player::getSpriteState(){
 }
 
 void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_state){
-	const int kCharacterFrame = 0;
-	const int kWalkFrame = 0;
-	const int kJumpFrame = 0;
-	const int kStandFrame = 0;
-	const int kUpFrameOffset = 3;
-
+	
 
 	int source_y = sprite_state.horizontal_facing == LEFT ?
 		kCharacterFrame * Game::kTileSize :
 		(1 + kCharacterFrame) * Game::kTileSize;
 	int source_x;
-	switch(sprite_state.horizontal_facing){
+	switch(sprite_state.motion_type){
 		case WALKING:
 			source_x = kWalkFrame * Game::kTileSize;
 			break;
@@ -225,6 +194,32 @@ void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_stat
 	source_x = sprite_state.vertical_facing == UP ?
 		source_x + kUpFrameOffset * Game::kTileSize :
 		source_x;
+
+	if(sprite_state.motion_type == WALKING){
+		//create animated sprite
+		sprites_[sprite_state] =
+			boost::shared_ptr<Sprite>(new AnimatedSprite(
+				graphics,
+				kSpriteFilePath,
+				source_x, source_y,
+				Game::kTileSize, Game::kTileSize,
+				m_renderer, kWalkFps, kNumFrames));
+	}
+	else{
+		if(sprite_state.vertical_facing == DOWN){
+			source_x = sprite_state.motion_type == STANDING ?
+				kBackFrame * Game::kTileSize :
+				kDownFrame * Game::kTileSize;
+		}
+		//create static
+		sprites_[sprite_state] =
+			boost::shared_ptr<Sprite>(new Sprite(
+				graphics,
+				kSpriteFilePath,
+				source_x, source_y,
+				Game::kTileSize, Game::kTileSize,
+				m_renderer));
+	}
 	// characterFrame*kTileSize if we are going left
 	// otherwise (characterFrame+1)*kTileSize
 }

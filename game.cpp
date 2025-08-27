@@ -6,12 +6,16 @@
 #include "player.h"
 #include "input.h"
 
+namespace{
+	const int kFps = 60;
+}
+
 int Game::kTileSize = 32;
 
 Game::Game(){
 	SDL_Init(0);
 	SDL_HideCursor();
-	
+
 	eventLoop();
 }
 Game::~Game(){
@@ -87,26 +91,29 @@ void Game::eventLoop(){
 		//player jump
 		if(input.wasKeyPressed(SDLK_Z)){
 			player_->startJump();
-		} else if(input.wasKeyReleased(SDLK_Z)){
+		}
+		else if(input.wasKeyReleased(SDLK_Z)){
 			player_->stopJump();
 		}
-		
+
 		//	ensure this loop lasts 1/60th of a second / runs 1000/60ths of a ms
-		
+
 		const int current_time_ms = SDL_GetTicks();
 		update(current_time_ms - last_update_time);
 		last_update_time = current_time_ms;
-		
+
 		draw(graphics);
 		SDL_RenderPresent(m_renderer);
-		Uint32 elapsed_time_ms = SDL_GetTicks() - start_time_ms;
-		if((1000 / 60) >= elapsed_time_ms){
-			SDL_Delay(1000 / 60 - elapsed_time_ms);
+
+		const int ms_per_frame = 1000 / kFps;
+		const int elapsed_time_ms = SDL_GetTicks() - start_time_ms;
+		if(elapsed_time_ms < ms_per_frame){
+			SDL_Delay(ms_per_frame - elapsed_time_ms);
 		}
 		const float seconds_per_frame = (SDL_GetTicks() - start_time_ms) / 1000.0;
 		const float fps = 1 / (seconds_per_frame);
 		//printf("fps=%f\n", fps);
-		
+
 	}
 	//while running ~ 60hz
 	//	handle inputs. handle timer callbacks.
@@ -118,11 +125,11 @@ void Game::update(int elapsed_time_ms){
 	player_->update(elapsed_time_ms);
 }
 
-void Game::draw(Graphics &graphics){
+void Game::draw(Graphics& graphics){
 	SDL_RenderClear(m_renderer);
 	SDL_SetRenderDrawColor(m_renderer, 0, 255, 0, 255);
 	player_->draw(graphics);
-	
+
 	//graphics.flip();
 }
 

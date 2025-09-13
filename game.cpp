@@ -120,7 +120,7 @@ void Game::eventLoop(){
 	//	update(). handle player movement projectiles collisions etc etc
 	//	draw(). draw everything all at once
 }
-
+//
 void Game::update(int elapsed_time_ms){
 	player_->update(elapsed_time_ms);
 }

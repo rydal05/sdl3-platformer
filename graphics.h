@@ -19,8 +19,8 @@ struct Graphics{
 		return m_renderer;
 	}
 
-	
-	void blitSurface(SDL_Renderer* renderer, TextureID texture,SDL_FRect* source_rectangle, SDL_FRect* destination_rectangle);
+
+	void blitSurface(SDL_Renderer* renderer, TextureID texture, SDL_FRect* source_rectangle, SDL_FRect* destination_rectangle);
 
 	private:
 	TextureMap texture_storage_;

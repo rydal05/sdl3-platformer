@@ -28,7 +28,7 @@ namespace{
 	const int kWalkFps = 15;
 	const int kNumFrames = 3;
 
-	
+
 }
 
 bool operator<(const Player::SpriteState& a, const Player::SpriteState& b){
@@ -169,7 +169,7 @@ Player::SpriteState Player::getSpriteState(){
 }
 
 void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_state){
-	
+
 
 	int source_y = sprite_state.horizontal_facing == LEFT ?
 		kCharacterFrame * Game::kTileSize :

@@ -18,5 +18,5 @@ Sprite::~Sprite(){
 void Sprite::draw(Graphics& graphics, int x, int y){
 	m_destinationFRect = new SDL_FRect{(float)x,(float)y,m_sourceFRect->w,m_sourceFRect->h};
 
-	graphics.blitSurface(m_renderer,m_texture,m_sourceFRect, m_destinationFRect);
+	graphics.blitSurface(m_renderer, m_texture, m_sourceFRect, m_destinationFRect);
 }

@@ -20,7 +20,7 @@ struct Game{
 	private:
 	void eventLoop();
 	void update(int elapsed_time_ms);
-	void draw(Graphics &graphics);
+	void draw(Graphics& graphics);
 
 	SDL_Renderer* m_renderer;
 	boost::scoped_ptr<Player> player_;

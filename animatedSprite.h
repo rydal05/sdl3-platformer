@@ -4,7 +4,7 @@
 #include "sprite.h"
 #include "game.h"
 
-struct AnimatedSprite: public Sprite {
+struct AnimatedSprite: public Sprite{
 	AnimatedSprite(Graphics& graphics, const std::string& file_path,
 		int source_x, int source_y,
 		int width, int height,

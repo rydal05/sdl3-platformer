@@ -59,7 +59,7 @@ void Game::eventLoop(){
 
 		if(input.wasKeyPressed(SDLK_ESCAPE)){
 			running = false;
-		}
+		} 
 
 		//player horizontal movement
 		if(input.isKeyHeld(SDLK_LEFT) && input.isKeyHeld(SDLK_RIGHT)){

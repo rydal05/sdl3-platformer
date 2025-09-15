@@ -4,10 +4,8 @@
 #include <SDL3/SDL.h>
 #include <boost/scoped_ptr.hpp>
 
-
-#include "graphics.h"
-#include "player.h"
-
+struct Map;
+struct Graphics;
 struct Player;
 
 struct Game{
@@ -24,7 +22,7 @@ struct Game{
 
 	SDL_Renderer* m_renderer;
 	boost::scoped_ptr<Player> player_;
-	boost::scoped_ptr<Player> player_2_;
+	boost::scoped_ptr<Map> map_;
 };
 
 #endif 

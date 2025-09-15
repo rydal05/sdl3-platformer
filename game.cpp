@@ -5,6 +5,7 @@
 #include "graphics.h"
 #include "player.h"
 #include "input.h"
+#include "map.h"
 
 namespace{
 	const int kFps = 60;
@@ -29,6 +30,7 @@ void Game::eventLoop(){
 
 	m_renderer = graphics.getRenderer();
 	player_.reset(new Player(320, 240, m_renderer, graphics));
+	map_.reset(Map::createTestMap(graphics));
 
 
 	bool running = true;
@@ -59,7 +61,7 @@ void Game::eventLoop(){
 
 		if(input.wasKeyPressed(SDLK_ESCAPE)){
 			running = false;
-		} 
+		}
 
 		//player horizontal movement
 		if(input.isKeyHeld(SDLK_LEFT) && input.isKeyHeld(SDLK_RIGHT)){
@@ -127,8 +129,11 @@ void Game::update(int elapsed_time_ms){
 
 void Game::draw(Graphics& graphics){
 	SDL_RenderClear(m_renderer);
-	SDL_SetRenderDrawColor(m_renderer, 0, 255, 0, 255);
+	SDL_SetRenderDrawColor(m_renderer, 127, 127, 127, 255);
+
+
 	player_->draw(graphics);
+	map_->draw(graphics);
 
 	//graphics.flip();
 }

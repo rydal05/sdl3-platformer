@@ -9,6 +9,7 @@ Sprite::Sprite(Graphics& graphics, const std::string& file_path, int x, int y, i
 	};
 	m_renderer = renderer;
 	m_texture = graphics.loadTexture(file_path);
+	SDL_SetTextureScaleMode(m_texture, SDL_SCALEMODE_NEAREST);
 }
 
 Sprite::~Sprite(){
@@ -18,5 +19,12 @@ Sprite::~Sprite(){
 void Sprite::draw(Graphics& graphics, int x, int y){
 	m_destinationFRect = new SDL_FRect{(float)x,(float)y,m_sourceFRect->w,m_sourceFRect->h};
 
-	graphics.blitSurface(m_renderer, m_texture, m_sourceFRect, m_destinationFRect);
+	SDL_RenderTexture(m_renderer, m_texture, m_sourceFRect, m_destinationFRect);
+}
+
+void Sprite::scaled_draw(Graphics& graphics, int x, int y, int scale){
+	m_destinationFRect = new SDL_FRect{(float)x,(float)y,m_sourceFRect->w*scale,m_sourceFRect->h*scale};
+
+
+	SDL_RenderTexture(m_renderer, m_texture, m_sourceFRect, m_destinationFRect);
 }

@@ -89,7 +89,7 @@ void Player::update(int elapsed_time_ms){
 
 void Player::draw(Graphics& graphics){
 	sprites_[getSpriteState()]->draw(graphics, x_, y_);
-	std::cout << y_ << std::endl;
+	//std::cout << y_ << std::endl;
 
 }
 

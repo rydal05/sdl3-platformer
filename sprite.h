@@ -13,6 +13,7 @@ struct Sprite{
 
 	virtual void update(int/*elapsed_time_ms*/){}
 	void draw(Graphics& graphics, int x, int y);
+	void scaled_draw(Graphics& graphics, int x, int y, int scale);
 
 	protected:
 	SDL_Renderer* m_renderer;

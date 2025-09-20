@@ -3,7 +3,12 @@
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
+
 #include "sprite.h"
+#include "rectangle.h"
+#include "graphics.h"
+#include "game.h"
+
 
 struct Map{
 	enum TileType{
@@ -21,14 +26,12 @@ struct Map{
 	};
 	static Map* createTestMap(Graphics& graphics);
 
-	std::vector<CollisionTile> getCollidiingTiles(const Rectangle& rectangle) const;
+	std::vector<CollisionTile> getCollidiingTiles(Rectangle& rectangle) ;
 
 	void update(int elapsed_time_ms);
 	void draw(Graphics& graphics) const;
 
 	private:
-
-	
 
 	struct Tile{
 		Tile(TileType tile_type = AIR_TILE,
@@ -44,4 +47,4 @@ struct Map{
 
 };
 
-#endif 
+#endif

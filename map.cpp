@@ -1,9 +1,5 @@
 #include "map.h"
 
-#include "sprite.h"
-#include "graphics.h"
-#include "game.h"
-
 using boost::shared_ptr;
 using std::vector;
 
@@ -28,6 +24,23 @@ Map* Map::createTestMap(Graphics& graphics){
 	}
 
 	return map;
+}
+
+vector<Map::CollisionTile> Map::getCollidiingTiles(Rectangle& rectangle){
+	int first_row = rectangle.top() / Game::kTileSize;
+	int last_row = rectangle.bottom() / Game::kTileSize;
+	int first_col = rectangle.left() / Game::kTileSize;
+	int last_col = rectangle.right() / Game::kTileSize;
+
+	vector<CollisionTile> collision_tiles;
+		
+	for(int row = first_row; row <= last_row; ++row){
+		for(int col = first_col; col <= last_col; ++col){
+			collision_tiles.push_back(CollisionTile(row, col, tiles_[row][col].tile_type));
+		}
+	}
+
+	return collision_tiles;
 }
 
 void Map::update(int elapsed_time_ms){

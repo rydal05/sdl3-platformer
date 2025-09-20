@@ -5,7 +5,7 @@
 #include <iostream>
 
 int main(int argc, char* argv[]){
-	std::cout << SDL_GetVersion() << std::endl;
+	//std::cout << SDL_GetVersion() << std::endl;
 	Game game;
 	return 0;
 }

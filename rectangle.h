@@ -15,6 +15,7 @@ struct Rectangle{
 
 	int width(){ return width_; }
 	int height(){ return height_; }
+
 	private:
 	int x_, y_, width_, height_;
 };

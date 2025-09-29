@@ -124,7 +124,7 @@ void Game::eventLoop(){
 }
 //
 void Game::update(int elapsed_time_ms){
-	player_->update(elapsed_time_ms);
+	player_->update(elapsed_time_ms, *map_);
 }
 
 void Game::draw(Graphics& graphics){

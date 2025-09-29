@@ -10,7 +10,7 @@ namespace{
 }
 
 Graphics::Graphics(){
-	SDL_CreateWindowAndRenderer("GameWin", kScreenWidth, kScreenHeight, NULL, &m_window, &m_renderer);
+	SDL_CreateWindowAndRenderer("GameWin", kScreenWidth, kScreenHeight, NULL, &m_window, &m_renderer); 
 }
 
 Graphics::~Graphics(){

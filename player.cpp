@@ -28,7 +28,9 @@ namespace{
 	const int kWalkFps = 15;
 	const int kNumFrames = 3;
 
-
+	//Collision Rect
+	Rectangle kCollisionX(6, 10, 20, 12);
+	Rectangle kCollisionY(10, 2, 12, 30);
 }
 
 bool operator<(const Player::SpriteState& a, const Player::SpriteState& b){
@@ -59,7 +61,7 @@ Player::Player(int x, int y, SDL_Renderer* renderer, Graphics& graphics) :
 	acceleration_x_ = 0.0f;
 }
 
-void Player::update(int elapsed_time_ms){
+void Player::update(int elapsed_time_ms, const Map&){
 	sprites_[getSpriteState()]->update(elapsed_time_ms);
 	jump_.update(elapsed_time_ms);
 
@@ -236,4 +238,46 @@ void Player::Jump::update(int elapsed_time_ms){
 			active_ = false;
 		}
 	}
+}
+
+Rectangle Player::leftCollision(int delta) const{
+	assert(delta <= 0);
+	return Rectangle(
+		x_ + kCollisionX.left() + delta,
+		y_ + kCollisionX.top(),
+		kCollisionX.width() / 2 - delta,
+		kCollisionX.height()
+	);
+}
+
+Rectangle Player::rightCollision(int delta) const{
+	assert(delta >= 0);
+	return Rectangle(
+		x_ + kCollisionX.left() + kCollisionX.width() / 2,
+		y_ + kCollisionX.top(),
+		kCollisionX.width() / 2 + delta,
+		kCollisionX.height()
+	);
+}
+
+Rectangle Player::topCollision(int delta) const{
+	assert(delta <= 0);
+	return Rectangle(
+		x_ + kCollisionY.left(),
+		y_ + kCollisionY.top() + delta,
+		kCollisionX.width(),
+		kCollisionX.height() / 2 - delta
+		
+	);
+}
+
+Rectangle Player::bottomCollision(int delta) const{
+	assert(delta >= 0);
+	return Rectangle(
+		x_ + kCollisionY.left(),
+		y_ + kCollisionY.top() + kCollisionY.height() / 2,
+		kCollisionX.width(),
+		kCollisionX.height() / 2 + delta
+
+	);
 }

@@ -7,12 +7,14 @@
 #include "game.h"
 #include "animatedSprite.h"
 #include "graphics.h"
-
+#include "map.h"
+#include "rectangle.h"
 
 struct Player{
 
 	Player(int x, int y, SDL_Renderer* renderer, Graphics& graphics);
-	void update(int elapsed_time_ms);
+	
+	void update(int elapsed_time_ms, const Map& map);
 	void draw(Graphics& graphics);
 
 	void startMovingLeft();
@@ -93,6 +95,13 @@ struct Player{
 	void initializeSprites(Graphics& grapihcs);
 	void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);
 	SpriteState getSpriteState();
+
+	Rectangle leftCollision(int delta) const;
+	Rectangle rightCollision(int delta) const;
+	
+	Rectangle bottomCollision(int delta) const;
+	Rectangle topCollision(int delta) const;
+
 
 	bool on_ground() const{ return on_ground_; }
 

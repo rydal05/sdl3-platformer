@@ -61,10 +61,15 @@ Player::Player(int x, int y, SDL_Renderer* renderer, Graphics& graphics) :
 	acceleration_x_ = 0.0f;
 }
 
-void Player::update(int elapsed_time_ms, const Map&){
+void Player::update(int elapsed_time_ms, const Map& map){
 	sprites_[getSpriteState()]->update(elapsed_time_ms);
 	jump_.update(elapsed_time_ms);
 
+	Player::updateX(elapsed_time_ms, map);
+	Player::updateY(elapsed_time_ms, map);
+}
+
+void Player::updateX(int elapsed_time_ms, const Map& map){
 	x_ += round(velocity_x_ * elapsed_time_ms);
 	velocity_x_ += acceleration_x_ * elapsed_time_ms;
 	if(acceleration_x_ < 0.0f){
@@ -76,17 +81,40 @@ void Player::update(int elapsed_time_ms, const Map&){
 	else if(on_ground()){ // is 0
 		velocity_x_ *= kSlowdownFactor;
 	}
+}
 
+void Player::updateY(int elapsed_time_ms, const Map& map){
+	//update velocity
 	y_ += round(velocity_y_ * elapsed_time_ms);
 	if(!jump_.active()){
 		velocity_y_ = std::min(velocity_y_ + kGravity * elapsed_time_ms, kMaxSpeedY);
 	}
 
-	if(y_ >= 320){
-		y_ = 320;
-		velocity_y_ = 0.0f;
+	//calculate delta
+	const int delta = (int)round(velocity_y_ * elapsed_time_ms);
+	if(delta > 0){
+		//check collision in the direction of delta
+		std::vector<Map::CollisionTile> tiles(map.getCollidingTiles(bottomCollision(delta)));//TODO: dunno why this broken lol
+		bool collided = false;
+		int row = 0, col = 0;
+		for(size_t i = 0; i < tiles.size(); i++){
+			if(tiles[i].tileType == Map::WALL_TILE){
+				collided = true;
+				row = tiles[i].row;
+				col = tiles[i].col;
+				break;
+			}
+		}
+		//react to collision
+		on_ground_ = collided;
+		if(collided){
+			row* Game::kTileSize - kCollisionY.bottom();
+			velocity_y_ = 0.0f;
+		}
+		else{
+			y_ += delta;
+		}
 	}
-	on_ground_ = y_ == 320;
 }
 
 void Player::draw(Graphics& graphics){
@@ -171,8 +199,6 @@ Player::SpriteState Player::getSpriteState(){
 }
 
 void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_state){
-
-
 	int source_y = sprite_state.horizontal_facing == LEFT ?
 		kCharacterFrame * Game::kTileSize :
 		(1 + kCharacterFrame) * Game::kTileSize;
@@ -267,7 +293,7 @@ Rectangle Player::topCollision(int delta) const{
 		y_ + kCollisionY.top() + delta,
 		kCollisionX.width(),
 		kCollisionX.height() / 2 - delta
-		
+
 	);
 }
 
@@ -278,6 +304,5 @@ Rectangle Player::bottomCollision(int delta) const{
 		y_ + kCollisionY.top() + kCollisionY.height() / 2,
 		kCollisionX.width(),
 		kCollisionX.height() / 2 + delta
-
 	);
 }

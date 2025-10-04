@@ -102,6 +102,8 @@ struct Player{
 	Rectangle bottomCollision(int delta) const;
 	Rectangle topCollision(int delta) const;
 
+	void updateX(int elapsed_time_ms, const Map& map);
+	void updateY(int elapsed_time_ms, const Map& map);
 
 	bool on_ground() const{ return on_ground_; }
 

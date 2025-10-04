@@ -26,7 +26,7 @@ Map* Map::createTestMap(Graphics& graphics){
 	return map;
 }
 
-vector<Map::CollisionTile> Map::getCollidiingTiles(Rectangle& rectangle){
+vector<Map::CollisionTile> Map::getCollidingTiles(Rectangle& rectangle){
 	int first_row = rectangle.top() / Game::kTileSize;
 	int last_row = rectangle.bottom() / Game::kTileSize;
 	int first_col = rectangle.left() / Game::kTileSize;

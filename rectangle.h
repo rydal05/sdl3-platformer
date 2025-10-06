@@ -8,13 +8,13 @@ struct Rectangle{
 		width_(width),
 		height_(height){}
 
-	int left(){ return x_; }
-	int right(){ return x_ + width_; }
-	int top(){ return y_; }
-	int bottom(){ return y_ + height_; }
+	int left() const{ return x_; }
+	int right() const{ return x_ + width_; }
+	int top() const{ return y_; }
+	int bottom() const{ return y_ + height_; }
 
-	int width(){ return width_; }
-	int height(){ return height_; }
+	int width() const{ return width_; }
+	int height() const{ return height_; }
 
 	private:
 	int x_, y_, width_, height_;

@@ -23,17 +23,23 @@ Map* Map::createTestMap(Graphics& graphics){
 		map->tiles_[row][col] = tile;
 	}
 
+	map->tiles_[10][5] = tile;
+	map->tiles_[9][4] = tile;
+	map->tiles_[8][3] = tile;
+	map->tiles_[7][2] = tile;
+	map->tiles_[10][3] = tile;
+
 	return map;
 }
 
-vector<Map::CollisionTile> Map::getCollidingTiles(Rectangle& rectangle){
-	int first_row = rectangle.top() / Game::kTileSize;
-	int last_row = rectangle.bottom() / Game::kTileSize;
-	int first_col = rectangle.left() / Game::kTileSize;
-	int last_col = rectangle.right() / Game::kTileSize;
+vector<Map::CollisionTile> Map::getCollidingTiles(const Rectangle& rectangle) const{
+	const int first_row = rectangle.top() / Game::kTileSize;
+	const int last_row = rectangle.bottom() / Game::kTileSize;
+	const int first_col = rectangle.left() / Game::kTileSize;
+	const int last_col = rectangle.right() / Game::kTileSize;
 
 	vector<CollisionTile> collision_tiles;
-		
+	
 	for(int row = first_row; row <= last_row; ++row){
 		for(int col = first_col; col <= last_col; ++col){
 			collision_tiles.push_back(CollisionTile(row, col, tiles_[row][col].tile_type));

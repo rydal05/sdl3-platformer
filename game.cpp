@@ -125,11 +125,12 @@ void Game::eventLoop(){
 //
 void Game::update(int elapsed_time_ms){
 	player_->update(elapsed_time_ms, *map_);
+	map_->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics& graphics){
-	SDL_RenderClear(m_renderer);
-	SDL_SetRenderDrawColor(m_renderer, 127, 127, 127, 255);
+	SDL_RenderClear(m_renderer); //clear prev frame
+	SDL_SetRenderDrawColor(m_renderer, 127, 127, 127, 255); // set bg color
 
 
 	player_->draw(graphics);

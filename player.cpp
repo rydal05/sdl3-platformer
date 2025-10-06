@@ -54,11 +54,10 @@ Player::Player(int x, int y, SDL_Renderer* renderer, Graphics& graphics) :
 	velocity_y_(0.0f),
 	acceleration_x_(0.0f),
 	m_renderer(renderer),
-	horizontal_facing_(LEFT),
 	on_ground_(false),
+	horizontal_facing_(LEFT),
 	vertical_facing_(HORIZONTAL){
 	initializeSprites(graphics);
-	acceleration_x_ = 0.0f;
 }
 
 void Player::update(int elapsed_time_ms, const Map& map){
@@ -70,7 +69,6 @@ void Player::update(int elapsed_time_ms, const Map& map){
 }
 
 void Player::updateX(int elapsed_time_ms, const Map& map){
-	x_ += round(velocity_x_ * elapsed_time_ms);
 	velocity_x_ += acceleration_x_ * elapsed_time_ms;
 	if(acceleration_x_ < 0.0f){
 		velocity_x_ = std::max(velocity_x_, -kMaxSpeedX);
@@ -85,7 +83,6 @@ void Player::updateX(int elapsed_time_ms, const Map& map){
 
 void Player::updateY(int elapsed_time_ms, const Map& map){
 	//update velocity
-	y_ += round(velocity_y_ * elapsed_time_ms);
 	if(!jump_.active()){
 		velocity_y_ = std::min(velocity_y_ + kGravity * elapsed_time_ms, kMaxSpeedY);
 	}
@@ -93,26 +90,44 @@ void Player::updateY(int elapsed_time_ms, const Map& map){
 	//calculate delta
 	const int delta = (int)round(velocity_y_ * elapsed_time_ms);
 	if(delta > 0){
+
+		struct CollisionInfo{
+			bool collided;
+			int row, col;
+		};
+
 		//check collision in the direction of delta
-		std::vector<Map::CollisionTile> tiles(map.getCollidingTiles(bottomCollision(delta)));//TODO: dunno why this broken lol
-		bool collided = false;
-		int row = 0, col = 0;
+		CollisionInfo info = {false, 0, 0};
+		std::vector<Map::CollisionTile> tiles(map.getCollidingTiles(bottomCollision(delta)));
 		for(size_t i = 0; i < tiles.size(); i++){
 			if(tiles[i].tileType == Map::WALL_TILE){
-				collided = true;
-				row = tiles[i].row;
-				col = tiles[i].col;
+				info = {true, tiles[i].row, tiles[i].col};
 				break;
 			}
 		}
+
 		//react to collision
-		on_ground_ = collided;
-		if(collided){
-			row* Game::kTileSize - kCollisionY.bottom();
+		if(info.collided){
+			y_ = info.row * Game::kTileSize - kCollisionY.height();
 			velocity_y_ = 0.0f;
 		}
 		else{
 			y_ += delta;
+			on_ground_ = false;
+		}
+		//Check collision in other direction
+		info = {false,0,0};
+		tiles = map.getCollidingTiles(topCollision(0));
+		for(size_t i = 0; i < tiles.size(); i++){
+			if(tiles[i].tileType == Map::WALL_TILE){
+				info = {true, tiles[i].row, tiles[i].col};
+				break;
+			}
+		}
+
+		if(info.collided){
+			y_ = info.row * Game::kTileSize + kCollisionY.bottom();
+			on_ground_ = true;
 		}
 	}
 }
@@ -291,9 +306,8 @@ Rectangle Player::topCollision(int delta) const{
 	return Rectangle(
 		x_ + kCollisionY.left(),
 		y_ + kCollisionY.top() + delta,
-		kCollisionX.width(),
-		kCollisionX.height() / 2 - delta
-
+		kCollisionY.width(),
+		kCollisionY.height() / 2 - delta
 	);
 }
 
@@ -302,7 +316,7 @@ Rectangle Player::bottomCollision(int delta) const{
 	return Rectangle(
 		x_ + kCollisionY.left(),
 		y_ + kCollisionY.top() + kCollisionY.height() / 2,
-		kCollisionX.width(),
-		kCollisionX.height() / 2 + delta
+		kCollisionY.width(),
+		kCollisionY.height() / 2 + delta
 	);
 }

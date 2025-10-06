@@ -26,7 +26,7 @@ struct Map{
 	};
 	static Map* createTestMap(Graphics& graphics);
 
-	std::vector<CollisionTile> getCollidingTiles(Rectangle& rectangle) ;
+	std::vector<CollisionTile> getCollidingTiles(const Rectangle& rectangle) const;
 
 	void update(int elapsed_time_ms);
 	void draw(Graphics& graphics) const;
